@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+	<style>
+		#map {
+			width: 100%;
+			height: 600px;
+			box-shadow: 5px 5px 5px #888;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="map"></div>
+	<script>
+		var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
+				+ 'contributors', maxZoom: 20
+		});
+
+
+		var map = L.map('map', {
+			center: [1.6171976147621363, -75.60679621463021],
+			zoom: 15,
+			layers: [osm],
+			scrollWheelZoom: true,
+		});
+
+		L.control.scale()
+			.addTo(map);
+		//---------------------------------------------------------------------------------------------------------------
+
+		var myIcon = L.icon({
+			iconUrl: 'https://lh4.googleusercontent.com/-g6riZwSTzQg/AAAAAAAAAAI/AAAAAAAAAAA/McnbJy-Y5g8/s44-p-k-no-ns-nd/photo.jpg',
+			iconSize: [35, 35],
+			popupAnchor: [-1, -10]
+		});
+		var marker = L.marker([1.6205559806593763, -75.6040839419437], {
+			icon: myIcon,
+			draggable: false,
+			title: " Ver detalles"
+		})
+			//.addTo(map)
+			.bindPopup("Universidad de la Amazonia <b>www.uniamazonia.edu.co </b>" +
+				"<img src='https://fastly.4sqi.net/img/general/600x600/1040451_SQeOqBxdBm3BxmWe0m9vYsAk5KVdV0ohNRjWgAdF4os.jpg ' width='300' height='241'>");
+
+
+		marker.bindTooltip("Universidad de la Amazonia",
+			{ parmanent: false }).openTooltip();
+
+		//---------------------------------------------------------------------------------------------------------------
+
+
+
+		var iconAlca = L.icon({
+			iconUrl: 'https://cdn-icons-png.flaticon.com/512/619/619097.png',
+			iconSize: [30, 30],
+			popupAnchor: [-1, -10]
+		});
+
+		var marker2 = L.marker([1.6149956080487693, -75.61392342928154], {
+			icon: iconAlca,
+			draggable: false,//si esta en true el marcador es arrastable
+			title: "Ver Detalles"
+		})
+			//.addTo(map)
+			.bindPopup("Horarios:" + "<br> Lunes 7:00 - 11:30, 14:00 - 17:30" +
+				"<br> Martes 7:00 - 11:30, 14:00 - 17:30" +
+				"<br> Miercoles 7:00 - 11:30, 14:00 - 17:30" +
+				"<br> Jueves 7:00 - 11:30, 14:00 - 17:30" +
+				"<br> Viernes 7:00 - 11:30, 14:00 - 17:30" +
+				"<br> Sabados y Domingos: Cerrado");
+
+		marker2.bindTooltip("Alcaldia de Florencia",
+			{ parmanent: false }).openTooltip();
+
+
+
+		var circle = L.circle([1.6149956080487693, -75.61392342928154], 500, {
+			color: 'red',
+			fillColor: '#f03',
+			fillOpacity: 0.5
+		})//.addTo(map)
+			;
+		circle.bindPopup("Radio de la alcandia: 500 mt a la redonda");
+
+
+		//---------------------------------------------------------------------------------------------------------------
+
+
+
+		var iconPlaza = L.icon({
+			iconUrl: 'https://cdn-icons-png.flaticon.com/512/3095/3095057.png',
+			iconSize: [30, 30],
+			popupAnchor: [-1, -10]
+		});
+
+		var marker3 = L.marker([1.614951674319078, -75.61329581622877], {
+			icon: iconPlaza,
+			draggable: false,
+			title: "Ver Detalles"
+		})
+			//.addTo(map)
+			.bindPopup("Plaza Santander" +
+				"<img src='https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.uniamazonia.edu.co%2Famazoniaypaz%2Fprioridades-en-las-obras-de-infraestructura-para-el-caqueta-y-florencia%2F&psig=AOvVaw1OpmGrQjtoF4RyUMdcJIOD&ust=1654452940938000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCPDBgdKzlPgCFQAAAAAdAAAAABAd' width='300' height='241'>");
+
+		
+		marker3.bindTooltip("Parque principal, Plaza Santander",
+			{ parmanent: false }).openTooltip();
+
+
+		var polygon = L.polygon([
+			[1.6151776160219056, -75.61369756582816],
+			[1.6145148418369617, -75.61349865457957],
+			[1.6147073619796157, -75.61282614512004],
+			[1.6153985407021683, -75.61304084297566]
+
+		])//.addTo(map)
+			.bindPopup('Plaza Central, Parque principal');
+
+
+		//---------------------------------------------------------------------------------------------------------------
+
+
+		var pointA = new L.LatLng(1.6207296412855543, -75.60023709930029);
+		var pointB = new L.LatLng(1.619629889448653, -75.60118947583035);
+		var pointC = new L.LatLng(1.6196767541608286, -75.60137171383386);
+		var pointD = new L.LatLng(1.6196170729017108, -75.60164635734367);
+		var pointE = new L.LatLng(1.6197603079206242, -75.6019717501977);
+		var pointF = new L.LatLng(1.6197573238578375, -75.60212399823033);
+		var pointG = new L.LatLng(1.6199065269870194, -75.60268821156608);
+		var pointH = new L.LatLng(1.6194518764032222, -75.60302547286541);
+		var pointI = new L.LatLng(1.6191518740328918, -75.60317250244249);
+		var pointJ = new L.LatLng(1.61909278264989, -75.60327557473008);
+		var pointK = new L.LatLng(1.6191155101072199, -75.6039409972282);
+		var pointL = new L.LatLng(1.6192442990137432, -75.60423050907323);
+		var pointM = new L.LatLng(1.619560968166129, -75.60445181131123);
+		var pointN = new L.LatLng(1.6199761228569474, -75.60442907478019);
+
+
+		var latlngs = [pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH, pointJ, pointK, pointL, pointM, pointN];
+		var polyline = L.polyline(
+			latlngs, { color: 'red' }
+		)
+			//.addTo(map)
+			.bindPopup('Destino: Ubicación actual a Universidad de la Amazonia');
+
+		//---------------------------------------------------------------------------------------------------------------
+
+		/*
+				var popup = L.popup()
+					.setLatLng([1.6171976147621363, -75.60679621463021])
+					.setContent('<p>Hola!<br/> Soy un boton popup.</p>')
+					.openOn(map);
+		*/
+
+		var grupoCapa = L.layerGroup([
+			marker,
+			marker2,
+			marker3,
+			circle,
+			polygon,
+			polyline
+
+		]).addTo(map);
+
+
+	</script>
+</body>
+
+</html>
