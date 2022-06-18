@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="Leaflet-MiniMap-master/Leaflet-MiniMap-master/dist/Control.MiniMap.min.css" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script type="text/javascript" src="countries.js"></script>
+    <script type="text/javascript" src="departamentos.js"></script>
+    <script type="text/javascript" src="ciudades.js"></script>
+
+    <link rel="stylesheet" href="dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="dist/MarkerCluster.Default.css" />
+
+
+    <script src="dist/leaflet.markercluster.js"></script>
+
+
+
+
+
+    <style>
+        #map {
+            width: 100%;
+            height: 800px;
+            box-shadow: 5px 5px 5px #888;
+        }
+
+
+        .info {
+			padding: 6px 8px;
+			font: 14px/16px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255, 255, 255, 0.8);
+			box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+			border-radius: 5px;
+		}
+
+		.info h2 {
+			margin: 0 0 5px;
+			color: #777;
+		}
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+
+    <script src="Leaflet-MiniMap-master/Leaflet-MiniMap-master/dist/Control.MiniMap.min.js"></script>
+    
+    <script>
+
+
+
+
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
+                + 'contributors',
+            maxZoom: 18
+        });
+
+
+        var map = L.map('map', {
+            center: [41.66, -4.72],
+            zoom: 4,
+            layers: [osm]
+            
+        });
+
+        // L.geoJson(countries).addTo(map);
+
+
+
+        // paises
+        function getColor(d) {
+            return d > 100000000 ? '#800026' :
+                d > 50000000 ? '#BD0026' :
+                    d > 20000000 ? '#E31A1C' :
+                        d > 10000000 ? '#FC4E2A' :
+                            d > 5000000 ? '#FD8D3C' :
+                                d > 2000000 ? '#FEB24C' :
+                                    d > 1000000 ? '#FED976' :
+                                        '#FFEDA0';
+        };
+
+        // 
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.pop_est),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+        //
+        // L.geoJson(countries, {
+        // style: style
+        // }).addTo(map);
+
+        //
+        function popup(feature, layer) {
+            if (feature.properties && feature.properties.name) {
+                layer.bindPopup(feature.properties.name);
+            }
+        }
+        function popup1(feature, layer) {
+            if (feature.properties && feature.properties.COD_DANE) {
+                layer.bindPopup(feature.properties.COD_DANE);
+            }
+        }
+        function popup2(feature, layer) {
+            if (feature.properties && feature.properties.CIUDAD) {
+                layer.bindPopup(feature.properties.CIUDAD);
+            }
+        }
+
+
+
+
+        // DEPARTAMENTO
+        function getColordepa(d) {
+            return d > 100000000000 ? '#000080' :
+                d > 50000000000 ? '#008080' :
+                    d > 20000000000 ? '#800080' :
+                        d > 10000000000 ? '#008000' :
+                            d > 5000000000 ? '#800000' :
+                                d > 2000000000 ? '#AECD38' :
+                                    d > 1000000000 ? '#808000' :
+                                        '#def8d9';
+        };
+ 
+        // 
+        function estilo1(feature) {
+            return {
+                fillColor: getColordepa(feature.properties.SHAPE_AREA),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+
+
+     
+
+        // ciudades con circulos normales
+        function getColor2(d) {
+            if (d == "S") {
+                d = 'RED';
+            }
+            else if (d == "N") {
+                d = 'BLUE';
+            }
+            return d;
+        };
+
+
+
+        // ciudades con cluster
+
+        const markers = L.markerClusterGroup();
+
+        function pointToLayer(feature, latlng) {
+            return markers.addLayer(L.circleMarker(latlng, {
+                // Stroke properties
+                color: 'BLACK',
+                opacity: 0.75,
+                weight: 5,
+
+                // Fill properties
+                fillColor: getColor2(feature.properties.CAPITAL),
+                fillOpacity: 0.6,
+
+                radius: 5
+            }));
+        }
+
+
+        // control capas
+
+        var baseMaps = {
+            "Open Street Mpas": osm
+        }
+
+        var paises = L.geoJson(countries, {
+            style: style,
+            onEachFeature: popup
+        })
+
+        var departamentos = L.geoJson(departamentos, {
+            style: estilo1,
+            onEachFeature: popup1
+        })
+
+
+        var ciudades = L.geoJson(ciudades, {
+            pointToLayer: pointToLayer,
+            onEachFeature: popup2
+        })
+
+        var overlayMaps = {
+
+            "Paises ": paises,
+            "departamentos": departamentos,
+            "Ciudades ": ciudades
+        };
+
+        var carto_light = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '©OpenStreetMap, ©CartoDB', subdomains: 'abcd', maxZoom: 24 });
+
+        // Agregar plugin MiniMap
+        var minimap = new L.Control.MiniMap(carto_light,
+            {
+                toggleDisplay: true,
+                minimized: false,
+                position: "bottomleft"
+            }).addTo(map);
+
+        L.control.scale({ imperial: false }).addTo(map);
+
+
+        var title = L.control();
+        title.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info');
+            div.innerHTML += '<h2>CAPAS JS</h2><h2>Paises mundo, Departamentos y Ciudades</h2>'; return div;
+        };
+        title.addTo(map);
+
+        //L.control.layers(osm, overlayMaps).addTo(map);
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+
+
+
+
+        L.control.scale().addTo(map);
+
+    </script>
+
+</body>
+
+</html>
